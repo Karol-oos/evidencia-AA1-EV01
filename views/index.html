@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conservar Sostenible</title>
+    
+    <!-- Swiper CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tu CSS -->
+    <link rel="stylesheet" href="/public/css/style.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="/img/favicon.ico" type="image/x-icon">
+</head>
+<body>
+    <!-- Header / Navegación -->
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+                <h1>CONSERVAR SOSTENIBLE</h1>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="/" class="active">Inicio</a></li>
+                <li><a href="/servicios">Servicios</a></li>
+                <li><a href="/tienda">Tienda</a></li>
+                <li><a href="/reservaciones">Reservaciones</a></li>
+                <li><a href="/contacto">Contacto</a></li>
+                <li><a href="#" id="login-btn"><i class="fas fa-user"></i> Iniciar Sesión</a></li>
+            </ul>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h2>TU MEJOR DESTINO PARA DISFRUTAR</h2>
+            <p>Porque para CONSERVAR tu alegría necesitas disfrutar de la belleza de este mundo con sus diferentes sitios turísticos y sus ambientes acogedores. ¿Qué esperas?</p>
+            <a href="#destinos" class="btn-hero">Explorar Destinos</a>
+        </div>
+    </section>
+
+    <!-- Carrusel de Imágenes -->
+    <section class="destinos" id="destinos">
+        <h2>Lugares Turísticos</h2>
+        <div class="swiper myswiper">
+            <div class="swiper-wrapper">
+                <!-- Imágenes del carrusel -->
+                <div class="swiper-slide">
+                    <img src="/img/destino1.jpg" alt="Destino 1" loading="lazy">
+                    <div class="slide-caption">
+                        <h3>Montañas Verdes</h3>
+                        <p>Naturaleza en su máximo esplendor</p>
+                    </div>
+                </div>
+                <div class="swiper-slide">
+                    <img src="/img/destino2.jpg" alt="Destino 2" loading="lazy">
+                    <div class="slide-caption">
+                        <h3>Playas Cristalinas</h3>
+                        <p>Arena blanca y aguas turquesas</p>
+                    </div>
+                </div>
+                <div class="swiper-slide">
+                    <img src="/img/destino3.jpg" alt="Destino 3" loading="lazy">
+                    <div class="slide-caption">
+                        <h3>Selva Amazónica</h3>
+                        <p>Biodiversidad única en el mundo</p>
+                    </div>
+                </div>
+                <!-- Agrega más slides según necesites -->
+            </div>
+            
+            <!-- Botones de navegación -->
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
+            
+            <!-- Paginación -->
+            <div class="swiper-pagination"></div>
+        </div>
+    </section>
+
+    <!-- Modal para imagen ampliada -->
+    <div id="image-modal" class="modal">
+        <span class="modal-close">&times;</span>
+        <img class="modal-content" id="modal-img">
+        <div id="caption"></div>
+    </div>
+
+    <!-- Modal para Login/Registro -->
+    <div id="login-modal" class="modal">
+        <div class="modal-content login-modal">
+            <span class="login-close">&times;</span>
+            
+            <!-- Pestañas -->
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="login">Iniciar Sesión</button>
+                <button class="tab-btn" data-tab="register">Registrarse</button>
+            </div>
+            
+            <!-- Formulario de Login -->
+            <form id="login-form" class="tab-content active">
+                <div class="form-group">
+                    <label for="login-email">Correo electrónico</label>
+                    <input type="email" id="login-email" name="email" required placeholder="ejemplo@correo.com">
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Contraseña</label>
+                    <input type="password" id="login-password" name="password" required placeholder="••••••••">
+                </div>
+                <button type="submit" class="btn-submit">
+                    <i class="fas fa-sign-in-alt"></i> Ingresar
+                </button>
+            </form>
+            
+            <!-- Formulario de Registro -->
+            <form id="register-form" class="tab-content">
+                <div class="form-group">
+                    <label for="nombre">Nombre completo</label>
+                    <input type="text" id="nombre" name="nombre" required placeholder="Tu nombre completo">
+                </div>
+                <div class="form-group">
+                    <label for="email">Correo electrónico</label>
+                    <input type="email" id="email" name="email" required placeholder="ejemplo@correo.com">
+                </div>
+                <div class="form-group">
+                    <label for="password">Contraseña</label>
+                    <input type="password" id="password" name="password" required placeholder="Mínimo 6 caracteres">
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword">Confirmar Contraseña</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" required placeholder="Repite tu contraseña">
+                </div>
+                <button type="submit" class="btn-submit">
+                    <i class="fas fa-user-plus"></i> Crear Cuenta
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Conservar Sostenible</h3>
+                <p>Promoviendo el turismo responsable y sostenible.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Contacto</h3>
+                <p><i class="fas fa-envelope"></i> info@conservarsostenible.com</p>
+                <p><i class="fas fa-phone"></i> +57 123 456 7890</p>
+            </div>
+            <div class="footer-section">
+                <h3>Síguenos</h3>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Conservar Sostenible. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <script src="/public/js/main.js"></script>
+</body>
+</html>

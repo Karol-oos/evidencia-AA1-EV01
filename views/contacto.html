@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>Contacto</h1>
+    <img src="../assets/img/Imagen_contacto_conservar.jpg" alt="Imagen de contacto" style="width:800px;height:800px;">
+    <div class="contact-form">
+        <form method="post" action="registrar.php">
+            <h2>Suscríbete a nuestras novedades</h2>
+
+
+            <input type="text" name="nombre" placeholder="Nombre completo" required>
+            <input type="email" name="correo" placeholder="correo" required>
+            <input type="date" id="fecha" name="fecha" required>
+            <input type="text" id="lugar" name="lugar" placeholder="lugar de interes" required>
+            <div class="form-group">
+                <label for="tipo">medio de pago:</label>
+                <select id="tipo" name="tipo" required>
+                    <option value="">Selecciona una opción</option>
+                    <option value="efectivo">efectivo</option>
+                    <option value="nequi">nequi</option>
+                    <option value="pse">spe</option>
+                    <option value="tarjeta">tarjeta</option>
+                    <option value="addi">addi</option>
+                    <option value="sistecredito">sistecredito</option>
+                </select>
+            </div>
+            <input type="submit" name="enviar" value="enviar">
+        </form>
+    </div>
+</body>
+
+</html>
