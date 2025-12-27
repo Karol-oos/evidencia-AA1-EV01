@@ -1,34 +1,68 @@
-const db = require('../config/database');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
+const authService = require('../services/auth.service');
 
-const registerUser = async (req, res) => {
+/**
+ * Controlador para registro de usuarios
+ */
+exports.register = async (req, res) => {
     try {
-        const { nombre, correo, contrasena } = req.body;
-        const hashedPassword = await bcrypt.hash(contrasena, 10);
-        await db.query('INSERT INTO usuarios (nombre, correo, contrasena) VALUES (?, ?, ?)', 
-        [nombre, correo, hashedPassword]);
-        res.status(201).json({ message: 'Usuario creado' });
-    } catch (error) {
-        res.status(500).json({ error: 'Error al registrar' });
-    }
-};
-
-const loginUser = async (req, res) => {
-    try {
-        const { correo, contrasena } = req.body;
-        const [rows] = await db.query('SELECT * FROM usuarios WHERE correo = ?', [correo]);
+        const { nombre, email, password } = req.body;
         
-        if (rows.length === 0) return res.status(404).json({ error: 'Usuario no encontrado' });
-
-        const validPass = await bcrypt.compare(contrasena, rows[0].contrasena);
-        if (!validPass) return res.status(401).json({ error: 'Contraseña incorrecta' });
-
-        const token = jwt.sign({ id: rows[0].id }, 'tu_clave_secreta', { expiresIn: '1h' });
-        res.json({ token, usuario: { nombre: rows[0].nombre } });
+        // Llamar al servicio
+        const result = await authService.registerUser({
+            nombre,
+            email,
+            password
+        });
+        
+        // Responder al cliente
+        res.status(201).json({
+            success: true,
+            message: 'Usuario registrado exitosamente',
+            data: result
+        });
+        
     } catch (error) {
-        res.status(500).json({ error: 'Error en el servidor' });
+        console.error('Error en controlador de registro:', error);
+        res.status(500).json({
+            success: false,
+            message: error.message || 'Error interno del servidor'
+        });
     }
 };
 
-module.exports = { registerUser, loginUser };
+/**
+ * Controlador para login de usuarios
+ */
+exports.login = async (req, res) => {
+    try {
+        const { email, password } = req.body;
+        
+        // Llamar al servicio
+        const result = await authService.loginUser({
+            email,
+            password
+        });
+        
+        // Responder al cliente
+        res.status(200).json({
+            success: true,
+            message: 'Login exitoso',
+            data: result
+        });
+        
+    } catch (error) {
+        console.error('Error en controlador de login:', error);
+        
+        if (error.message === 'Credenciales inválidas') {
+            return res.status(401).json({
+                success: false,
+                message: 'Credenciales inválidas'
+            });
+        }
+        
+        res.status(500).json({
+            success: false,
+            message: error.message || 'Error interno del servidor'
+        });
+    }
+};

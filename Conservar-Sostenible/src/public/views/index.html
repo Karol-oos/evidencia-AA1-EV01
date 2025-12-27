@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conservar Sostenible</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        header {
+            background: #2E7D32;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+        }
+        .hero {
+            background: url('img/destino1.jpg') center/cover;
+            height: 500px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-align: center;
+            padding: 2rem;
+        }
+        .carrusel {
+            display: flex;
+            overflow-x: auto;
+            padding: 2rem;
+            gap: 1rem;
+        }
+        .carrusel img {
+            height: 200px;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>CONSERVAR SOSTENIBLE</h1>
+        <p>Inicio | Servicios | Tienda | Reservaciones | Contacto | Iniciar Sesión</p>
+    </header>
+    
+    <div class="hero">
+        <div>
+            <h2>TU MEJOR DESTINO PARA DISFRUTAR</h2>
+            <p>Porque para CONSERVAR tu alegría necesitas disfrutar de la belleza de este mundo...</p>
+            <button>Explorar Destinos</button>
+        </div>
+    </div>
+    
+    <h2 style="text-align: center; margin: 2rem;">Lugares Turísticos</h2>
+    
+    <div class="carrusel">
+        <img src="img/destino1.jpg" alt="Montañas">
+        <img src="img/destino2.jpg" alt="Playas">
+        <img src="img/destino3.jpg" alt="Selva">
+        <img src="img/destino4.jpg" alt="Cascadas">
+        <img src="img/destino5.jpg" alt="Ciudades">
+        <img src="img/destino6.jpg" alt="Auroras">
+    </div>
+    
+    <script>
+        // Rotación automática simple
+        let currentImage = 0;
+        const images = [
+            'img/destino1.jpg',
+            'img/destino2.jpg', 
+            'img/destino3.jpg',
+            'img/destino4.jpg',
+            'img/destino5.jpg',
+            'img/destino6.jpg'
+        ];
+        
+        setInterval(() => {
+            currentImage = (currentImage + 1) % images.length;
+            document.querySelector('.hero').style.backgroundImage = `url(${images[currentImage]})`;
+        }, 3000);
+    </script>
+</body>
+</html>

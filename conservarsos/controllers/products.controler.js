@@ -1,58 +1,52 @@
-const pool = require('../config/database');
+const productsService = require('../services/products.service');
 
 /**
- * Obtener todos los productos
+ * Controlador para obtener todos los productos
  */
-exports.getProducts = async (req, res) => {
+exports.getAllProducts = async (req, res) => {
     try {
-        const [products] = await pool.execute('SELECT * FROM productos');
-        res.json(products);
+        const products = await productsService.getAllProducts();
+        
+        res.status(200).json({
+            success: true,
+            count: products.length,
+            data: products
+        });
+        
     } catch (error) {
         console.error('Error obteniendo productos:', error);
-        res.status(500).json({ message: 'Error interno del servidor' });
+        res.status(500).json({
+            success: false,
+            message: 'Error al obtener productos'
+        });
     }
 };
 
 /**
- * Obtener producto por ID
+ * Controlador para obtener producto por ID
  */
 exports.getProductById = async (req, res) => {
     try {
         const { id } = req.params;
-        const [products] = await pool.execute(
-            'SELECT * FROM productos WHERE id = ?',
-            [id]
-        );
-
-        if (products.length === 0) {
-            return res.status(404).json({ message: 'Producto no encontrado' });
+        const product = await productsService.getProductById(id);
+        
+        if (!product) {
+            return res.status(404).json({
+                success: false,
+                message: 'Producto no encontrado'
+            });
         }
-
-        res.json(products[0]);
+        
+        res.status(200).json({
+            success: true,
+            data: product
+        });
+        
     } catch (error) {
         console.error('Error obteniendo producto:', error);
-        res.status(500).json({ message: 'Error interno del servidor' });
-    }
-};
-
-/**
- * Crear nuevo producto
- */
-exports.createProduct = async (req, res) => {
-    try {
-        const { nombre, descripcion, precio, categoria, imagen } = req.body;
-        
-        const [result] = await pool.execute(
-            'INSERT INTO productos (nombre, descripcion, precio, categoria, imagen) VALUES (?, ?, ?, ?, ?)',
-            [nombre, descripcion, precio, categoria, imagen]
-        );
-
-        res.status(201).json({
-            message: 'Producto creado',
-            id: result.insertId
+        res.status(500).json({
+            success: false,
+            message: 'Error al obtener producto'
         });
-    } catch (error) {
-        console.error('Error creando producto:', error);
-        res.status(500).json({ message: 'Error interno del servidor' });
     }
 };

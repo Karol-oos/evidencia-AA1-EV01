@@ -1,53 +1,31 @@
 const express = require('express');
 const router = express.Router();
-const { getProducts, getProductById, createProduct } = require('../controllers/products.controller');
+const productsController = require('../controllers/products.controller');
+const authMiddleware = require('../middlewares/auth.middleware');
 
 /**
- * @swagger
- * /api/products:
- *   get:
- *     summary: Obtener todos los productos
- *     tags: [Productos]
- *     responses:
- *       200:
- *         description: Lista de productos
+ * @route   GET /api/products
+ * @desc    Obtener todos los productos
+ * @access  Public
  */
-router.get('/', getProducts);
+router.get('/', productsController.getAllProducts);
 
 /**
- * @swagger
- * /api/products/{id}:
- *   get:
- *     summary: Obtener producto por ID
- *     tags: [Productos]
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: integer
- *     responses:
- *       200:
- *         description: Producto encontrado
+ * @route   GET /api/products/:id
+ * @desc    Obtener producto por ID
+ * @access  Public
  */
-router.get('/:id', getProductById);
+router.get('/:id', productsController.getProductById);
 
 /**
- * @swagger
- * /api/products:
- *   post:
- *     summary: Crear nuevo producto
- *     tags: [Productos]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/Product'
- *     responses:
- *       201:
- *         description: Producto creado
+ * @route   POST /api/products
+ * @desc    Crear nuevo producto
+ * @access  Private/Admin
  */
-router.post('/', createProduct);
+router.post('/', 
+    authMiddleware.verifyToken,     // Solo usuarios autenticados
+    authMiddleware.isAdmin,         // Solo administradores
+    productsController.createProduct
+);
 
 module.exports = router;

@@ -1,46 +1,26 @@
 const express = require('express');
 const router = express.Router();
-const { register, login } = require('../controllers/auth.controller');
+const authController = require('../controllers/auth.controller');
+const validate = require('../middlewares/validate.middleware');
 
 /**
- * @swagger
- * /api/auth/register:
- *   post:
- *     summary: Registrar nuevo usuario
- *     tags: [Autenticación]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/User'
- *     responses:
- *       201:
- *         description: Usuario registrado
+ * @route   POST /api/auth/register
+ * @desc    Registrar nuevo usuario
+ * @access  Public
  */
-router.post('/register', register);
+router.post('/register', 
+    validate.validateRegister,  // Middleware de validación
+    authController.register     // Controlador
+);
 
 /**
- * @swagger
- * /api/auth/login:
- *   post:
- *     summary: Iniciar sesión
- *     tags: [Autenticación]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               email:
- *                 type: string
- *               password:
- *                 type: string
- *     responses:
- *       200:
- *         description: Login exitoso
+ * @route   POST /api/auth/login
+ * @desc    Autenticar usuario
+ * @access  Public
  */
-router.post('/login', login);
+router.post('/login', 
+    validate.validateLogin,     // Middleware de validación
+    authController.login        // Controlador
+);
 
 module.exports = router;
