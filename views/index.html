@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conservar Sostenible - Turismo Ecológico</title>
+    <style>
+        /* Variables y reset */
+        :root {
+            --primary: #2E7D32;
+            --primary-dark: #1B5E20;
+            --primary-light: #4CAF50;
+            --secondary: #FF9800;
+            --light: #F5F5F5;
+            --dark: #333;
+            --gray: #666;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header */
+        .main-header {
+            background: white;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary);
+            text-decoration: none;
+        }
+        
+        .logo i {
+            font-size: 2rem;
+            color: var(--primary);
+        }
+        
+        .main-nav {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+        
+        .main-nav a {
+            text-decoration: none;
+            color: var(--dark);
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+        
+        .main-nav a:hover {
+            background: var(--primary-light);
+            color: white;
+        }
+        
+        .main-nav a.active {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .login-btn {
+            background: var(--secondary);
+            color: white !important;
+            padding: 0.5rem 1.5rem !important;
+            border-radius: 25px;
+            font-weight: 600;
+        }
+        
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--primary);
+        }
+        
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(46, 125, 50, 0.85), rgba(46, 125, 50, 0.9)), 
+                        url('img/hero-bg.jpg') center/cover no-repeat;
+            color: white;
+            text-align: center;
+            padding: 6rem 2rem;
+            margin-bottom: 4rem;
+            border-radius: 0 0 20px 20px;
+        }
+        
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto 2rem;
+            opacity: 0.95;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background: var(--secondary);
+            color: white;
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            border: 2px solid var(--secondary);
+        }
+        
+        .cta-button:hover {
+            background: transparent;
+            border-color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        
+        /* Destinos Section */
+        .destinos-section {
+            padding: 4rem 0;
+            background: var(--light);
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+            color: var(--primary);
+            font-size: 2.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        .section-title i {
+            color: var(--secondary);
+        }
+        
+        .destinos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+        }
+        
+        .destino-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .destino-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+        
+        .destino-image {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+        }
+        
+        .destino-content {
+            padding: 1.5rem;
+        }
+        
+        .destino-title {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            font-size: 1.3rem;
+        }
+        
+        .destino-desc {
+            color: var(--gray);
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+        }
+        
+        .destino-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .feature-tag {
+            background: #E8F5E9;
+            padding: 0.4rem 0.9rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            color: var(--primary-dark);
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .feature-tag i {
+            font-size: 0.8rem;
+        }
+        
+        .btn-reservar {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 0.7rem 1.5rem;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background 0.3s;
+            width: 100%;
+            text-align: center;
+        }
+        
+        .btn-reservar:hover {
+            background: var(--primary-dark);
+        }
+        
+        .btn-reservar i {
+            margin-left: 5px;
+            transition: transform 0.3s;
+        }
+        
+        .btn-reservar:hover i {
+            transform: translateX(5px);
+        }
+        
+        /* Newsletter */
+        .newsletter {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 4rem 0;
+            text-align: center;
+            margin: 4rem 0;
+        }
+        
+        .newsletter h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .newsletter p {
+            max-width: 600px;
+            margin: 0 auto 2rem;
+            opacity: 0.9;
+        }
+        
+        .newsletter-form {
+            max-width: 500px;
+            margin: 2rem auto 0;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .newsletter-form input {
+            flex: 1;
+            padding: 1rem 1.5rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+        }
+        
+        .newsletter-form button {
+            background: var(--secondary);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: transform 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .newsletter-form button:hover {
+            transform: scale(1.05);
+        }
+        
+        /* Footer */
+        .main-footer {
+            background: #222;
+            color: white;
+            padding: 3rem 0 1.5rem;
+        }
+        
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .footer-section h3 {
+            color: var(--primary-light);
+            margin-bottom: 1.2rem;
+            font-size: 1.2rem;
+        }
+        
+        .footer-section p {
+            color: #ddd;
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+        
+        .footer-section a {
+            display: block;
+            color: #ddd;
+            text-decoration: none;
+            margin-bottom: 0.7rem;
+            transition: color 0.3s;
+        }
+        
+        .footer-section a:hover {
+            color: var(--secondary);
+        }
+        
+        .contact-info {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 1rem;
+        }
+        
+        .contact-info i {
+            color: var(--secondary);
+            margin-top: 3px;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .social-links a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: var(--primary);
+            border-radius: 50%;
+            color: white;
+            font-size: 1.2rem;
+            transition: all 0.3s;
+        }
+        
+        .social-links a:hover {
+            background: var(--secondary);
+            transform: translateY(-3px);
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid #444;
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-container {
+                flex-wrap: wrap;
+            }
+            
+            .main-nav {
+                display: none;
+                width: 100%;
+                order: 3;
+                margin-top: 1rem;
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .main-nav.active {
+                display: flex;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .newsletter-form {
+                flex-direction: column;
+            }
+            
+            .destinos-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="main-header">
+        <div class="container header-container">
+            <a href="index.html" class="logo">
+                <i class="fas fa-leaf"></i>
+                <span>CONSERVAR SOSTENIBLE</span>
+            </a>
+            
+            <nav class="main-nav">
+                <a href="index.html" class="active">Inicio</a>
+                <a href="planes.html">Planes</a>
+                <a href="sobrenosotros.html">Sobre Nosotros</a>
+                <a href="contacto.html">Contacto</a>
+                <a href="tienda.html" id="cartIcon" style="position: relative;">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span id="cartCount" style="position: absolute; top: -8px; right: -12px; background: var(--secondary); color: white; border-radius: 50%; padding: 2px 6px; font-size: 0.7rem;">0</span>
+                </a>
+                <a href="login.html" class="login-btn">Acceder</a>
+            </nav>
+            
+            <button class="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>TU MEJOR DESTINO PARA DISFRUTAR</h1>
+            <p>Porque para CONSERVAR tu alegría necesitas disfrutar de la belleza de este mundo...</p>
+            <a href="destinos.html" class="cta-button">
+                <i class="fas fa-compass"></i> Explorar Destinos
+            </a>
+        </div>
+    </section>
+
+    <!-- Destinos Section -->
+    <section class="destinos-section">
+        <div class="container">
+            <h2 class="section-title">
+                <i class="fas fa-map-marked-alt"></i> Lugares Turísticos
+            </h2>
+            
+            <div class="destinos-grid">
+                <!-- Destino 1 -->
+                <div class="destino-card">
+                    <img src="img/destino1.jpg" alt="Montañas" class="destino-image">
+                    <div class="destino-content">
+                        <h3 class="destino-title">Montañas Verdes</h3>
+                        <p class="destino-desc">Explora las majestuosas montañas y respira el aire más puro en nuestro tour ecológico.</p>
+                        <div class="destino-features">
+                            <span class="feature-tag"><i class="fas fa-hiking"></i> Senderismo</span>
+                            <span class="feature-tag"><i class="fas fa-camera"></i> Fotografía</span>
+                            <span class="feature-tag"><i class="fas fa-leaf"></i> Eco-friendly</span>
+                        </div>
+                        <a href="reservaciones.html" class="btn-reservar">
+                            Reservar Ahora <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Destino 2 -->
+                <div class="destino-card">
+                    <img src="img/destino2.jpg" alt="Playas" class="destino-image">
+                    <div class="destino-content">
+                        <h3 class="destino-title">Playas Paradisíacas</h3>
+                        <p class="destino-desc">Relájate en playas vírgenes con aguas cristalinas y arena blanca.</p>
+                        <div class="destino-features">
+                            <span class="feature-tag"><i class="fas fa-umbrella-beach"></i> Playa</span>
+                            <span class="feature-tag"><i class="fas fa-fish"></i> Snorkel</span>
+                            <span class="feature-tag"><i class="fas fa-sun"></i> Clima tropical</span>
+                        </div>
+                        <a href="reservaciones.html" class="btn-reservar">
+                            Reservar Ahora <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Destino 3 -->
+                <div class="destino-card">
+                    <img src="img/destino3.jpg" alt="Selva" class="destino-image">
+                    <div class="destino-content">
+                        <h3 class="destino-title">Selva Tropical</h3>
+                        <p class="destino-desc">Adéntrate en la selva y descubre su biodiversidad única con guías expertos.</p>
+                        <div class="destino-features">
+                            <span class="feature-tag"><i class="fas fa-tree"></i> Aventura</span>
+                            <span class="feature-tag"><i class="fas fa-binoculars"></i> Observación</span>
+                            <span class="feature-tag"><i class="fas fa-recycle"></i> Sostenible</span>
+                        </div>
+                        <a href="reservaciones.html" class="btn-reservar">
+                            Reservar Ahora <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter -->
+    <section class="newsletter">
+        <div class="container">
+            <h2>Mantente Informado</h2>
+            <p>Suscríbete a nuestro newsletter y recibe ofertas exclusivas y noticias sobre turismo sostenible.</p>
+            <form class="newsletter-form">
+                <input type="email" placeholder="Tu correo electrónico" required>
+                <button type="submit">
+                    <i class="fas fa-paper-plane"></i> Suscribirse
+                </button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <!-- Sección 1: Logo y descripción -->
+                <div class="footer-section">
+                    <h3>CONSERVAR SOSTENIBLE</h3>
+                    <p>Promovemos un turismo responsable que conserva el medio ambiente y mejora el bienestar de las comunidades locales.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                
+                <!-- Sección 2: Enlaces rápidos -->
+                <div class="footer-section">
+                    <h3>Enlaces Rápidos</h3>
+                    <a href="index.html">Inicio</a>
+                    <a href="planes.html">Planes</a>
+                    <a href="destinos.html">Destinos</a>
+                    <a href="servicios.html">Servicios</a>
+                    <a href="tienda.html">Tienda</a>
+                </div>
+                
+                <!-- Sección 3: Información de contacto -->
+                <div class="footer-section">
+                    <h3>Contacto</h3>
+                    <div class="contact-info">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Ciudad Sostenible, Ecología 123</span>
+                    </div>
+                    <div class="contact-info">
+                        <i class="fas fa-phone"></i>
+                        <span>+1 234 567 8900</span>
+                    </div>
+                    <div class="contact-info">
+                        <i class="fas fa-envelope"></i>
+                        <span>info@conservarsostenible.com</span>
+                    </div>
+                </div>
+                
+                <!-- Sección 4: Horarios -->
+                <div class="footer-section">
+                    <h3>Horarios de Atención</h3>
+                    <p>Lunes - Viernes: 8:00 AM - 6:00 PM</p>
+                    <p>Sábado: 9:00 AM - 2:00 PM</p>
+                    <p>Domingo: Cerrado</p>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2023 Conservar Sostenible. Todos los derechos reservados. | <a href="politica-privacidad.html" style="color: var(--secondary);">Política de Privacidad</a> | <a href="terminos.html" style="color: var(--secondary);">Términos y Condiciones</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Menú móvil
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        const mainNav = document.querySelector('.main-nav');
+        
+        mobileMenuBtn.addEventListener('click', () => {
+            mainNav.classList.toggle('active');
+            mobileMenuBtn.innerHTML = mainNav.classList.contains('active') 
+                ? '<i class="fas fa-times"></i>' 
+                : '<i class="fas fa-bars"></i>';
+        });
+        
+        // Carrusel de imágenes en hero (si quieres agregarlo)
+        const heroImages = [
+            'img/destino1.jpg',
+            'img/destino2.jpg',
+            'img/destino3.jpg',
+            'img/destino4.jpg',
+            'img/destino5.jpg',
+            'img/destino6.jpg'
+        ];
+        
+        let currentHeroImage = 0;
+        const heroSection = document.querySelector('.hero');
+        
+        function changeHeroBackground() {
+            currentHeroImage = (currentHeroImage + 1) % heroImages.length;
+            heroSection.style.backgroundImage = `linear-gradient(rgba(46, 125, 50, 0.85), rgba(46, 125, 50, 0.9)), url('${heroImages[currentHeroImage]}')`;
+        }
+        
+        // Cambiar cada 5 segundos
+        setInterval(changeHeroBackground, 5000);
+        
+        // Sistema de carrito simple
+        let cartCount = 0;
+        const cartCountElement = document.getElementById('cartCount');
+        
+        // Simular agregar productos (esto se puede conectar a la tienda)
+        function addToCart() {
+            cartCount++;
+            cartCountElement.textContent = cartCount;
+            cartCountElement.style.animation = 'none';
+            setTimeout(() => {
+                cartCountElement.style.animation = 'bounce 0.5s';
+            }, 10);
+        }
+        
+        // Simular productos de la tienda (esto se conectaría con tienda.html)
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('Página cargada correctamente');
+            // Aquí puedes cargar el conteo del carrito desde localStorage
+            const savedCart = localStorage.getItem('cartCount');
+            if (savedCart) {
+                cartCount = parseInt(savedCart);
+                cartCountElement.textContent = cartCount;
+            }
+        });
+        
+        // Guardar carrito al salir
+        window.addEventListener('beforeunload', () => {
+            localStorage.setItem('cartCount', cartCount);
+        });
+        
+        // Animación para el contador del carrito
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes bounce {
+                0%, 100% { transform: scale(1); }
+                50% { transform: scale(1.3); }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

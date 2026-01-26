@@ -11,4 +11,22 @@ const pool = mysql.createPool({
   queueLimit: 0
 });
 
+const { Pool } = require('pg');
+require('dotenv').config();
+
+// Probar conexión
+pool.connect((err, client, release) => {
+    if (err) {
+        console.error('❌ Error conectando a PostgreSQL:', err.message);
+    } else {
+        console.log('✅ PostgreSQL conectado correctamente');
+        release();
+    }
+});
+
+module.exports = {
+    query: (text, params) => pool.query(text, params),
+    pool
+};
+
 module.exports = pool.promise();

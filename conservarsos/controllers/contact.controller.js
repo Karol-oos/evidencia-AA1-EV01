@@ -1,20 +1,34 @@
-const pool = require('../config/database');
+const db = require('../config/database');
 
-/**
- * Enviar mensaje de contacto
- */
-exports.sendMessage = async (req, res) => {
+exports.createContact = async (req, res) => {
     try {
-        const { nombre, email, telefono, mensaje } = req.body;
-
-        await pool.execute(
-            'INSERT INTO contactos (nombre, email, telefono, mensaje) VALUES (?, ?, ?, ?)',
-            [nombre, email, telefono, mensaje]
+        const { name, email, message } = req.body;
+        
+        // Validar campos
+        if (!name || !email || !message) {
+            return res.status(400).json({ 
+                error: 'Todos los campos son requeridos' 
+            });
+        }
+        
+        // Insertar en base de datos
+        const result = await db.query(
+            'INSERT INTO contacts (name, email, message) VALUES ($1, $2, $3) RETURNING *',
+            [name, email, message]
         );
-
-        res.json({ message: 'Mensaje enviado exitosamente' });
+        
+        console.log('✅ Contacto guardado:', result.rows[0]);
+        
+        res.status(201).json({
+            success: true,
+            message: 'Mensaje enviado correctamente',
+            data: result.rows[0]
+        });
+        
     } catch (error) {
-        console.error('Error enviando mensaje:', error);
-        res.status(500).json({ message: 'Error interno del servidor' });
+        console.error('❌ Error guardando contacto:', error);
+        res.status(500).json({ 
+            error: 'Error del servidor al guardar el mensaje' 
+        });
     }
 };

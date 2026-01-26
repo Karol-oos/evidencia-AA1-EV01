@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Método de Pago - Conservar Sostenible</title>
+    <style>
+        /* Variables y reset */
+        :root {
+            --primary: #2E7D32;
+            --primary-dark: #1B5E20;
+            --primary-light: #4CAF50;
+            --secondary: #FF9800;
+            --dark: #333333;
+            --light: #F8F9FA;
+            --gray: #666666;
+            --border: #E0E0E0;
+            --success: #4CAF50;
+            --error: #F44336;
+            --warning: #FF9800;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header */
+        .payment-header {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 1.5rem 0;
+            margin-bottom: 2rem;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: var(--primary);
+            text-decoration: none;
+        }
+        
+        .logo i {
+            font-size: 1.8rem;
+        }
+        
+        .steps {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+        
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            color: var(--gray);
+            font-size: 0.95rem;
+        }
+        
+        .step.active {
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        .step-number {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        
+        .step.active .step-number {
+            background: var(--primary);
+            color: white;
+        }
+        
+        /* Layout de pago */
+        .payment-layout {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 2.5rem;
+            margin-bottom: 3rem;
+        }
+        
+        @media (max-width: 992px) {
+            .payment-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Panel izquierdo: Métodos de pago */
+        .payment-methods-section {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+        }
+        
+        .section-title {
+            font-size: 1.4rem;
+            color: var(--dark);
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .section-title i {
+            color: var(--primary);
+        }
+        
+        /* Métodos de pago */
+        .methods-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .method-card {
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: white;
+        }
+        
+        .method-card:hover {
+            border-color: var(--primary-light);
+            transform: translateY(-2px);
+        }
+        
+        .method-card.active {
+            border-color: var(--primary);
+            background: rgba(46, 125, 50, 0.05);
+            box-shadow: 0 5px 15px rgba(46, 125, 50, 0.1);
+        }
+        
+        .method-icon {
+            font-size: 2rem;
+            margin-bottom: 0.8rem;
+            color: var(--gray);
+        }
+        
+        .method-card.active .method-icon {
+            color: var(--primary);
+        }
+        
+        .method-name {
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        /* Formularios de pago */
+        .payment-form {
+            display: none;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border);
+        }
+        
+        .payment-form.active {
+            display: block;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--dark);
+            font-size: 0.95rem;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 0.9rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: all 0.3s;
+            background: #fafafa;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: white;
+            box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.1);
+        }
+        
+        /* Información de facturación */
+        .billing-section {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border);
+        }
+        
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin-bottom: 1rem;
+            cursor: pointer;
+        }
+        
+        .checkbox-group input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary);
+        }
+        
+        .checkbox-group a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+        
+        .checkbox-group a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Botón de pago */
+        .pay-button {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 1.5rem;
+        }
+        
+        .pay-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 7px 20px rgba(46, 125, 50, 0.3);
+        }
+        
+        .pay-button:disabled {
+            background: var(--gray);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        /* Panel derecho: Resumen */
+        .order-summary {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+            position: sticky;
+            top: 2rem;
+        }
+        
+        .order-items {
+            margin-bottom: 1.5rem;
+        }
+        
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.8rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .order-item:last-child {
+            border-bottom: none;
+        }
+        
+        .item-details h4 {
+            font-size: 1rem;
+            margin-bottom: 0.3rem;
+            color: var(--dark);
+        }
+        
+        .item-details p {
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+        
+        .item-price {
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .order-totals {
+            margin: 1.5rem 0;
+            padding-top: 1.5rem;
+            border-top: 2px solid var(--border);
+        }
+        
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.8rem;
+            font-size: 0.95rem;
+        }
+        
+        .total-row.grand-total {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 2px solid var(--border);
+        }
+        
+        /* Beneficios sostenibles */
+        .sustainable-benefits {
+            background: rgba(46, 125, 50, 0.05);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+            border-left: 4px solid var(--primary);
+        }
+        
+        .benefits-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 1rem;
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        .benefits-list {
+            list-style: none;
+        }
+        
+        .benefits-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 0.8rem;
+            font-size: 0.95rem;
+        }
+        
+        .benefits-list i {
+            color: var(--primary);
+            margin-top: 2px;
+        }
+        
+        /* Alertas */
+        .alert {
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            display: none;
+        }
+        
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .alert-info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+            }
+            
+            .steps {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .methods-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .methods-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .payment-methods-section,
+            .order-summary {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header con pasos -->
+    <header class="payment-header">
+        <div class="container header-content">
+            <a href="index.html" class="logo">
+                <i class="fas fa-leaf"></i>
+                <span>CONSERVAR SOSTENIBLE</span>
+            </a>
+            
+            <div class="steps">
+                <div class="step">
+                    <span class="step-number">1</span>
+                    <span>Reserva</span>
+                </div>
+                <div class="step">
+                    <span class="step-number">2</span>
+                    <span>Información</span>
+                </div>
+                <div class="step active">
+                    <span class="step-number">3</span>
+                    <span>Pago</span>
+                </div>
+                <div class="step">
+                    <span class="step-number">4</span>
+                    <span>Confirmación</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="alert" id="paymentAlert"></div>
+        
+        <div class="payment-layout">
+            <!-- Métodos de pago -->
+            <div class="payment-methods-section">
+                <h2 class="section-title">
+                    <i class="fas fa-credit-card"></i>
+                    Método de Pago
+                </h2>
+                
+                <!-- Métodos disponibles -->
+                <div class="methods-grid">
+                    <div class="method-card active" data-method="card">
+                        <div class="method-icon">
+                            <i class="far fa-credit-card"></i>
+                        </div>
+                        <div class="method-name">Tarjeta</div>
+                    </div>
+                    
+                    <div class="method-card" data-method="paypal">
+                        <div class="method-icon">
+                            <i class="fab fa-paypal"></i>
+                        </div>
+                        <div class="method-name">PayPal</div>
+                    </div>
+                    
+                    <div class="method-card" data-method="pse">
+                        <div class="method-icon">
+                            <i class="fas fa-university"></i>
+                        </div>
+                        <div class="method-name">PSE</div>
+                    </div>
+                    
+                    <div class="method-card" data-method="transfer">
+                        <div class="method-icon">
+                            <i class="fas fa-exchange-alt"></i>
+                        </div>
+                        <div class="method-name">Transferencia</div>
+                    </div>
+                </div>
+                
+                <!-- Formulario para tarjeta (activo por defecto) -->
+                <div class="payment-form active" id="cardForm">
+                    <div class="form-group">
+                        <label class="form-label">Número de tarjeta</label>
+                        <input type="text" id="cardNumber" class="form-input" 
+                               placeholder="1234 5678 9012 3456" maxlength="19">
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Nombre en la tarjeta</label>
+                            <input type="text" id="cardName" class="form-input" 
+                                   placeholder="JUAN PÉREZ">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Fecha de expiración</label>
+                            <input type="text" id="cardExpiry" class="form-input" 
+                                   placeholder="MM/AA" maxlength="5">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">CVC/CVV</label>
+                            <input type="text" id="cardCVC" class="form-input" 
+                                   placeholder="123" maxlength="4">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">País de emisión</label>
+                            <select id="cardCountry" class="form-input">
+                                <option value="CO">Colombia</option>
+                                <option value="US">Estados Unidos</option>
+                                <option value="ES">España</option>
+                                <option value="MX">México</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Formulario para PayPal -->
+                <div class="payment-form" id="paypalForm">
+                    <div class="info-message" style="text-align: center; padding: 2rem;">
+                        <i class="fab fa-paypal" style="font-size: 3rem; color: #003087; margin-bottom: 1rem;"></i>
+                        <p>Serás redirigido a PayPal para completar el pago de forma segura.</p>
+                        <button type="button" class="paypal-button" style="background: #003087; color: white; border: none; padding: 1rem 2rem; border-radius: 6px; margin-top: 1rem; cursor: pointer;">
+                            <i class="fab fa-paypal"></i> Continuar con PayPal
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Formulario para PSE -->
+                <div class="payment-form" id="pseForm">
+                    <div class="form-group">
+                        <label class="form-label">Selecciona tu banco</label>
+                        <select id="bankSelect" class="form-input">
+                            <option value="">Seleccionar banco</option>
+                            <option value="bancolombia">Bancolombia</option>
+                            <option value="davivienda">Davivienda</option>
+                            <option value="bogota">Banco de Bogotá</option>
+                            <option value="bbva">BBVA</option>
+                            <option value="avvilllas">Banco AV Villas</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Tipo de persona</label>
+                        <select id="personType" class="form-input">
+                            <option value="natural">Persona Natural</option>
+                            <option value="juridica">Persona Jurídica</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- Formulario para transferencia -->
+                <div class="payment-form" id="transferForm">
+                    <div class="info-message">
+                        <h3 style="margin-bottom: 1rem; color: var(--primary);">Información para transferencia</h3>
+                        <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 6px; border-left: 4px solid var(--primary);">
+                            <p><strong>Banco:</strong> Bancolombia</p>
+                            <p><strong>Cuenta:</strong> 123-456789-00</p>
+                            <p><strong>Tipo:</strong> Cuenta de Ahorros</p>
+                            <p><strong>Titular:</strong> Conservar Sostenible SAS</p>
+                            <p><strong>NIT:</strong> 901.234.567-8</p>
+                            <p style="margin-top: 1rem; color: var(--primary); font-weight: 600;">
+                                Envíanos el comprobante a: pagos@conservarsostenible.com
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Información de facturación -->
+                <div class="billing-section">
+                    <h3 class="section-title">
+                        <i class="fas fa-file-invoice"></i>
+                        Datos de Facturación
+                    </h3>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Nombre completo o razón social</label>
+                        <input type="text" id="billingName" class="form-input" 
+                               placeholder="Ej: Juan Pérez o Empresa SAS">
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">NIT/RUT (opcional)</label>
+                            <input type="text" id="billingNIT" class="form-input" 
+                                   placeholder="123.456.789-0">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Email para factura</label>
+                            <input type="email" id="billingEmail" class="form-input" 
+                                   placeholder="factura@email.com">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Dirección de facturación</label>
+                        <textarea id="billingAddress" class="form-input" rows="3" 
+                                  placeholder="Dirección completa"></textarea>
+                    </div>
+                </div>
+                
+                <!-- Términos y condiciones -->
+                <div class="billing-section">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="terms" required>
+                        <label for="terms">
+                            Acepto los <a href="#" target="_blank">términos y condiciones</a> 
+                            y la <a href="#" target="_blank">política de privacidad</a>
+                        </label>
+                    </div>
+                    
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="newsletter">
+                        <label for="newsletter">
+                            Recibir ofertas y noticias sobre turismo sostenible
+                        </label>
+                    </div>
+                    
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="donation">
+                        <label for="donation">
+                            Agregar $5,000 como donación para la conservación
+                        </label>
+                    </div>
+                </div>
+                
+                <!-- Botón de pago -->
+                <button class="pay-button" id="payButton" disabled>
+                    <i class="fas fa-lock"></i>
+                    Pagar Ahora - $300,000
+                </button>
+            </div>
+            
+            <!-- Resumen del pedido -->
+            <div class="order-summary">
+                <h2 class="section-title">
+                    <i class="fas fa-receipt"></i>
+                    Resumen del Pedido
+                </h2>
+                
+                <div class="order-items">
+                    <div class="order-item">
+                        <div class="item-details">
+                            <h4>Eco-Lodge Amazonas</h4>
+                            <p>3 noches · 2 personas</p>
+                        </div>
+                        <div class="item-price">$180,000</div>
+                    </div>
+                    
+                    <div class="order-item">
+                        <div class="item-details">
+                            <h4>Tour de Conservación</h4>
+                            <p>1 día · Incluye guía</p>
+                        </div>
+                        <div class="item-price">$50,000</div>
+                    </div>
+                    
+                    <div class="order-item">
+                        <div class="item-details">
+                            <h4>Kit Sostenible</h4>
+                            <p>Botella + Bolsa reutilizable</p>
+                        </div>
+                        <div class="item-price">$20,000</div>
+                    </div>
+                </div>
+                
+                <div class="order-totals">
+                    <div class="total-row">
+                        <span>Subtotal</span>
+                        <span>$250,000</span>
+                    </div>
+                    <div class="total-row">
+                        <span>Impuestos (19%)</span>
+                        <span>$47,500</span>
+                    </div>
+                    <div class="total-row">
+                        <span>Tarifa de servicio</span>
+                        <span>$2,500</span>
+                    </div>
+                    <div class="total-row grand-total">
+                        <span>Total</span>
+                        <span>$300,000</span>
+                    </div>
+                </div>
+                
+                <div class="sustainable-benefits">
+                    <h3 class="benefits-title">
+                        <i class="fas fa-leaf"></i>
+                        Tu compra contribuye a:
+                    </h3>
+                    <ul class="benefits-list">
+                        <li>
+                            <i class="fas fa-tree"></i>
+                            <span>Reforestación de 5 árboles nativos</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-hands-helping"></i>
+                            <span>Apoyo a comunidades locales</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-recycle"></i>
+                            <span>Programas de reciclaje y limpieza</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div style="margin-top: 2rem; font-size: 0.9rem; color: var(--gray); text-align: center;">
+                    <p><i class="fas fa-shield-alt"></i> Pago 100% seguro y cifrado</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Datos del pedido
+        const order = {
+            items: [
+                { name: "Eco-Lodge Amazonas", details: "3 noches · 2 personas", price: 180000 },
+                { name: "Tour de Conservación", details: "1 día · Incluye guía", price: 50000 },
+                { name: "Kit Sostenible", details: "Botella + Bolsa reutilizable", price: 20000 }
+            ],
+            subtotal: 250000,
+            tax: 47500,
+            serviceFee: 2500,
+            total: 300000
+        };
+        
+        // Método de pago seleccionado
+        let selectedMethod = 'card';
+        
+        // Mostrar alerta
+        function showAlert(message, type = 'info') {
+            const alertDiv = document.getElementById('paymentAlert');
+            alertDiv.textContent = message;
+            alertDiv.className = `alert alert-${type}`;
+            alertDiv.style.display = 'block';
+            
+            setTimeout(() => {
+                alertDiv.style.display = 'none';
+            }, 5000);
+        }
+        
+        // Cambiar método de pago
+        document.querySelectorAll('.method-card').forEach(card => {
+            card.addEventListener('click', function() {
+                // Quitar active de todos
+                document.querySelectorAll('.method-card').forEach(m => m.classList.remove('active'));
+                document.querySelectorAll('.payment-form').forEach(f => f.classList.remove('active'));
+                
+                // Agregar active al seleccionado
+                this.classList.add('active');
+                selectedMethod = this.dataset.method;
+                
+                // Mostrar formulario correspondiente
+                const formId = selectedMethod + 'Form';
+                document.getElementById(formId).classList.add('active');
+                
+                // Validar si se puede habilitar el botón de pago
+                validatePaymentButton();
+            });
+        });
+        
+        // Formatear número de tarjeta
+        document.getElementById('cardNumber')?.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
+            let formatted = value.replace(/(\d{4})/g, '$1 ').trim();
+            e.target.value = formatted;
+            
+            // Validar longitud (16 dígitos)
+            const cleanValue = value.replace(/\s/g, '');
+            if (cleanValue.length >= 13 && cleanValue.length <= 19) {
+                this.style.borderColor = '#4CAF50';
+            } else {
+                this.style.borderColor = '#F44336';
+            }
+            
+            validatePaymentButton();
+        });
+        
+        // Formatear fecha de expiración
+        document.getElementById('cardExpiry')?.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\//g, '');
+            if (value.length >= 2) {
+                e.target.value = value.substring(0, 2) + '/' + value.substring(2, 4);
+            }
+            
+            // Validar fecha
+            const month = parseInt(value.substring(0, 2));
+            if (month >= 1 && month <= 12) {
+                this.style.borderColor = '#4CAF50';
+            } else {
+                this.style.borderColor = '#F44336';
+            }
+            
+            validatePaymentButton();
+        });
+        
+        // Validar CVC
+        document.getElementById('cardCVC')?.addEventListener('input', function(e) {
+            const value = e.target.value.replace(/\D/g, '');
+            e.target.value = value;
+            
+            if (value.length >= 3 && value.length <= 4) {
+                this.style.borderColor = '#4CAF50';
+            } else {
+                this.style.borderColor = '#F44336';
+            }
+            
+            validatePaymentButton();
+        });
+        
+        // Validar botón de pago
+        function validatePaymentButton() {
+            const termsChecked = document.getElementById('terms').checked;
+            const payButton = document.getElementById('payButton');
+            
+            let isValid = termsChecked;
+            
+            // Validaciones específicas por método
+            if (selectedMethod === 'card') {
+                const cardNumber = document.getElementById('cardNumber').value.replace(/\s/g, '');
+                const cardName = document.getElementById('cardName').value.trim();
+                const cardExpiry = document.getElementById('cardExpiry').value;
+                const cardCVC = document.getElementById('cardCVC').value;
+                
+                isValid = isValid && 
+                         cardNumber.length >= 13 && 
+                         cardNumber.length <= 19 &&
+                         cardName.length > 0 &&
+                         cardExpiry.length === 5 &&
+                         cardCVC.length >= 3;
+            } else if (selectedMethod === 'pse') {
+                const bankSelected = document.getElementById('bankSelect').value;
+                isValid = isValid && bankSelected !== '';
+            }
+            
+            payButton.disabled = !isValid;
+        }
+        
+        // Validar términos y condiciones
+        document.getElementById('terms').addEventListener('change', validatePaymentButton);
+        
+        // Validar otros campos relevantes
+        document.getElementById('billingName')?.addEventListener('input', validatePaymentButton);
+        document.getElementById('bankSelect')?.addEventListener('change', validatePaymentButton);
+        
+        // Procesar pago
+        document.getElementById('payButton').addEventListener('click', async function() {
+            if (!document.getElementById('terms').checked) {
+                showAlert('Debes aceptar los términos y condiciones', 'error');
+                return;
+            }
+            
+            const button = this;
+            const originalText = button.innerHTML;
+            
+            // Mostrar loading
+            button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Procesando pago...';
+            button.disabled = true;
+            
+            try {
+                // Simular procesamiento
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                
+                // Crear datos del pago
+                const paymentData = {
+                    method: selectedMethod,
+                    amount: order.total,
+                    billing: {
+                        name: document.getElementById('billingName').value,
+                        email: document.getElementById('billingEmail').value,
+                        nit: document.getElementById('billingNIT').value,
+                        address: document.getElementById('billingAddress').value
+                    },
+                    items: order.items,
+                    donation: document.getElementById('donation').checked ? 5000 : 0,
+                    timestamp: new Date().toISOString(),
+                    transactionId: 'TX-' + Date.now()
+                };
+                
+                // Guardar en localStorage (simulación)
+                let payments = JSON.parse(localStorage.getItem('payments') || '[]');
+                payments.push(paymentData);
+                localStorage.setItem('payments', JSON.stringify(payments));
+                
+                // Mostrar éxito
+                showAlert('✅ ¡Pago procesado exitosamente! Redirigiendo a confirmación...', 'success');
+                
+                // Redirigir a página de confirmación
+                setTimeout(() => {
+                    window.location.href = `confirmation.html?tx=${paymentData.transactionId}`;
+                }, 1500);
+                
+            } catch (error) {
+                showAlert('❌ Error al procesar el pago. Intenta de nuevo.', 'error');
+                button.innerHTML = originalText;
+                button.disabled = false;
+            }
+        });
+        
+        // Botón de PayPal
+        document.querySelector('.paypal-button')?.addEventListener('click', function() {
+            showAlert('Redirigiendo a PayPal...', 'info');
+            // Aquí iría la integración real con PayPal
+        });
+        
+        // Calcular total con donación
+        document.getElementById('donation').addEventListener('change', function() {
+            const donation = this.checked ? 5000 : 0;
+            const newTotal = order.total + donation;
+            
+            // Actualizar total en el botón
+            const payButton = document.getElementById('payButton');
+            payButton.innerHTML = payButton.innerHTML.replace(/\$\d{1,3}(,\d{3})*/, 
+                `$${newTotal.toLocaleString('es-CO')}`);
+            
+            // Actualizar resumen si existe
+            const totalElement = document.querySelector('.grand-total span:last-child');
+            if (totalElement) {
+                totalElement.textContent = `$${newTotal.toLocaleString('es-CO')}`;
+            }
+        });
+        
+        // Inicializar validación
+        document.addEventListener('DOMContentLoaded', () => {
+            validatePaymentButton();
+            
+            // Simular que el usuario está logueado
+            const user = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user') || '{}');
+            if (user.email) {
+                document.getElementById('billingName').value = user.name || '';
+                document.getElementById('billingEmail').value = user.email || '';
+            }
+        });
+        // EN "pagos.html", REEMPLAZAR la función de procesamiento de pago:
+document.getElementById('payButton').addEventListener('click', async function() {
+    // ... validaciones existentes ...
+    
+    try {
+        // Simular procesamiento con diferentes métodos
+        const paymentMethods = {
+            'card': 'Tarjeta de crédito',
+            'paypal': 'PayPal',
+            'pse': 'PSE',
+            'transfer': 'Transferencia bancaria'
+        };
+        
+        showAlert(`Procesando pago con ${paymentMethods[selectedMethod]}...`, 'info');
+        
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        
+        // Crear datos del pago
+        const paymentData = {
+            method: selectedMethod,
+            methodName: paymentMethods[selectedMethod],
+            amount: order.total,
+            billing: { /* ... */ },
+            items: order.items,
+            donation: document.getElementById('donation').checked ? 5000 : 0,
+            timestamp: new Date().toISOString(),
+            transactionId: 'TX-' + Date.now().toString().slice(-8),
+            status: 'completed',
+            confirmationEmail: document.getElementById('billingEmail').value
+        };
+        
+        // Guardar en localStorage
+        let payments = JSON.parse(localStorage.getItem('payments') || '[]');
+        payments.push(paymentData);
+        localStorage.setItem('payments', JSON.stringify(payments));
+        
+        // Simular envío de email
+        if (paymentData.confirmationEmail) {
+            console.log(`📧 Email de confirmación enviado a: ${paymentData.confirmationEmail}`);
+            console.log(`Asunto: Confirmación de reserva ${paymentData.transactionId}`);
+            console.log(`Contenido: Detalles del pago y confirmación`);
+        }
+        
+        showAlert('✅ ¡Pago procesado exitosamente! Redirigiendo a confirmación...', 'success');
+        
+        // Redirigir
+        setTimeout(() => {
+            window.location.href = `confirmation.html?tx=${paymentData.transactionId}&method=${selectedMethod}`;
+        }, 1500);
+        
+    } catch (error) {
+        showAlert('❌ Error al procesar el pago. Intenta de nuevo.', 'error');
+        button.innerHTML = originalText;
+        button.disabled = false;
+    }
+});
+    </script>
+</body>
+</html>

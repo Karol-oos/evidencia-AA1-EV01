@@ -1,0 +1,1476 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reservaciones - Conservar Sostenible</title>
+    <style>
+        /* Variables y reset */
+        :root {
+            --primary: #2E7D32;
+            --primary-dark: #1B5E20;
+            --primary-light: #4CAF50;
+            --secondary: #FF9800;
+            --light: #F5F5F5;
+            --dark: #333333;
+            --gray: #666666;
+            --border: #E0E0E0;
+            --text-light: #888888;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            background-color: #ffffff;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header */
+        .main-header {
+            background: white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: var(--primary);
+            text-decoration: none;
+        }
+        
+        .logo i {
+            font-size: 1.8rem;
+        }
+        
+        .main-nav {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+        
+        .main-nav a {
+            text-decoration: none;
+            color: var(--dark);
+            padding: 0.5rem 0;
+            font-weight: 500;
+            position: relative;
+            transition: color 0.3s;
+        }
+        
+        .main-nav a:hover {
+            color: var(--primary);
+        }
+        
+        .main-nav a.active {
+            color: var(--primary);
+        }
+        
+        .main-nav a.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--primary);
+        }
+        
+        .login-btn {
+            background: var(--primary);
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+        
+        .login-btn:hover {
+            background: var(--primary-dark);
+        }
+        
+        /* Hero Section */
+        .hero-section {
+            padding: 3rem 0;
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .hero-title {
+            font-size: 2.2rem;
+            color: var(--dark);
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.1rem;
+            color: var(--gray);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        
+        /* Search Section */
+        .search-section {
+            padding: 2.5rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .section-title {
+            font-size: 1.3rem;
+            color: var(--dark);
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .section-title i {
+            color: var(--primary);
+        }
+        
+        .search-form {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .form-group label {
+            font-size: 0.9rem;
+            color: var(--gray);
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .form-group select,
+        .form-group input,
+        .form-group textarea {
+            padding: 0.8rem;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-size: 0.95rem;
+            background: white;
+            color: var(--dark);
+        }
+        
+        .form-group select:focus,
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(46, 125, 50, 0.1);
+        }
+        
+        .additional-filters {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+        }
+        
+        .search-button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 4px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 1.5rem;
+            width: 100%;
+        }
+        
+        .search-button:hover {
+            background: var(--primary-dark);
+        }
+        
+        /* Results Section */
+        .results-section {
+            padding: 2.5rem 0;
+        }
+        
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .results-count {
+            color: var(--gray);
+            font-size: 0.95rem;
+        }
+        
+        .sort-options {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+        
+        .sort-label {
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+        
+        .sort-select {
+            padding: 0.5rem;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            background: white;
+            font-size: 0.9rem;
+        }
+        
+        /* Experiences Grid */
+        .experiences-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .experience-card {
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+            background: white;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .experience-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .experience-header {
+            padding: 1.5rem 1.5rem 0.5rem 1.5rem;
+        }
+        
+        .experience-title {
+            font-size: 1.2rem;
+            color: var(--dark);
+            margin-bottom: 0.3rem;
+            font-weight: 600;
+        }
+        
+        .experience-location {
+            font-size: 0.9rem;
+            color: var(--gray);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 1rem;
+        }
+        
+        .experience-description {
+            color: var(--dark);
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 1rem;
+        }
+        
+        .experience-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .feature-tag {
+            background: #F1F8E9;
+            color: var(--primary-dark);
+            padding: 0.4rem 0.8rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .experience-sustainability {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .sustainability-badge {
+            background: #E8F5E9;
+            color: var(--primary);
+            padding: 0.3rem 0.7rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            border: 1px solid #C8E6C9;
+        }
+        
+        .experience-footer {
+            padding: 1rem 1.5rem;
+            background: #F9F9F9;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .experience-price {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .price-amount {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .price-note {
+            font-size: 0.85rem;
+            color: var(--gray);
+        }
+        
+        .reserve-button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.7rem 1.5rem;
+            border-radius: 4px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .reserve-button:hover {
+            background: var(--primary-dark);
+        }
+        
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            align-items: center;
+            justify-content: center;
+            z-index: 1001;
+        }
+        
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .modal-title {
+            font-size: 1.3rem;
+            color: var(--dark);
+            font-weight: 600;
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray);
+        }
+        
+        /* Carrito Modal */
+        #cartModal .modal-content {
+            max-width: 600px;
+        }
+        
+        .cart-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+            gap: 1rem;
+        }
+        
+        .cart-item-info {
+            flex: 2;
+        }
+        
+        .cart-item-name {
+            font-weight: bold;
+            margin-bottom: 0.3rem;
+        }
+        
+        .cart-item-location {
+            font-size: 0.85rem;
+            color: var(--gray);
+            margin-bottom: 0.5rem;
+        }
+        
+        .cart-item-price {
+            font-weight: bold;
+            color: var(--primary);
+        }
+        
+        .cart-item-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .quantity-btn {
+            width: 30px;
+            height: 30px;
+            border: 1px solid var(--border);
+            background: white;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .cart-item-quantity {
+            min-width: 30px;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .cart-item-total {
+            flex: 1;
+            text-align: right;
+            font-weight: bold;
+        }
+        
+        .cart-summary {
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 2px solid var(--border);
+        }
+        
+        .cart-total {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+        
+        .cart-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+        }
+        
+        .cart-empty-message {
+            text-align: center;
+            padding: 2rem;
+            color: var(--gray);
+        }
+        
+        /* Footer */
+        .main-footer {
+            background: #222;
+            color: white;
+            padding: 3rem 0 1.5rem;
+            margin-top: 3rem;
+        }
+        
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .footer-section h3 {
+            color: #4CAF50;
+            margin-bottom: 1.2rem;
+            font-size: 1.2rem;
+        }
+        
+        .footer-section a {
+            display: block;
+            color: #ddd;
+            text-decoration: none;
+            margin-bottom: 0.7rem;
+        }
+        
+        .footer-section a:hover {
+            color: #4CAF50;
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid #444;
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+        
+        /* Notificaciones */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--primary);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 4px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 1002;
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+        
+        /* Responsive */
+        @media (max-width: 992px) {
+            .form-grid,
+            .additional-filters {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header-content {
+                flex-wrap: wrap;
+            }
+            
+            .main-nav {
+                order: 3;
+                width: 100%;
+                margin-top: 1rem;
+                justify-content: center;
+            }
+            
+            .form-grid,
+            .additional-filters {
+                grid-template-columns: 1fr;
+            }
+            
+            .experiences-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .results-header {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+            }
+            
+            .cart-item {
+                flex-wrap: wrap;
+            }
+            
+            .cart-actions {
+                flex-direction: column;
+            }
+        }
+        
+        /* Mobile Menu */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--primary);
+        }
+        
+        @media (max-width: 576px) {
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .main-nav {
+                display: none;
+                flex-direction: column;
+                background: white;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+                padding: 1rem;
+            }
+            
+            .main-nav.active {
+                display: flex;
+            }
+            
+            .hero-title {
+                font-size: 1.8rem;
+            }
+        }
+
+        /* Estilos para el carrito */
+        .cart-icon {
+            position: relative;
+            cursor: pointer;
+            font-size: 1.2rem;
+            color: var(--primary);
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #FF4757;
+            color: white;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="main-header">
+        <div class="container header-content">
+            <a href="index.html" class="logo">
+                <i class="fas fa-leaf"></i>
+                <span>CONSERVAR SOSTENIBLE</span>
+            </a>
+            
+            <button class="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <nav class="main-nav">
+                <a href="index.html">Inicio</a>
+                <a href="servicios.html">Servicios</a>
+                <a href="tienda.html">Tienda</a>
+                <a href="reservaciones.html" class="active">Reservaciones</a>
+                <a href="contacto.html">Contacto</a>
+                <a href="login.html" class="login-btn">Iniciar Sesión</a>
+            </nav>
+
+            <!-- Icono del carrito -->
+            <div class="cart-icon" id="cartIcon">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="cart-count" id="cartCount">0</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <h1 class="hero-title">Reserva tu Aventura Sostenible</h1>
+            <p class="hero-subtitle">
+                Encuentra alojamientos ecológicos, tours responsables y experiencias únicas que cuidan el planeta
+            </p>
+        </div>
+    </section>
+
+    <!-- Search Section -->
+    <section class="search-section">
+        <div class="container">
+            <h2 class="section-title">
+                <i class="fas fa-search"></i>
+                Buscar Experiencias Sostenibles
+            </h2>
+            
+            <div class="search-form">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="destination">Destino</label>
+                        <select id="destination">
+                            <option value="">Seleccionar destino</option>
+                            <option value="amazonas">Amazonas</option>
+                            <option value="andes">Andes Colombianos</option>
+                            <option value="caribe">Caribe Sostenible</option>
+                            <option value="pacifico">Pacífico Colombiano</option>
+                            <option value="llanos">Llanos Orientales</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="checkin">Fecha de llegada</label>
+                        <input type="date" id="checkin">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="checkout">Fecha de salida</label>
+                        <input type="date" id="checkout">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="guests">Huéspedes</label>
+                        <select id="guests">
+                            <option value="1">1 persona</option>
+                            <option value="2">2 personas</option>
+                            <option value="3">3 personas</option>
+                            <option value="4">4 personas</option>
+                            <option value="5+">5+ personas</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="additional-filters">
+                    <div class="form-group">
+                        <label for="experience">Tipo de experiencia</label>
+                        <select id="experience">
+                            <option value="">Todas las experiencias</option>
+                            <option value="eco-lodge">Eco-Lodge</option>
+                            <option value="camping">Camping Ecológico</option>
+                            <option value="tour">Tour Guiado</option>
+                            <option value="voluntariado">Voluntariado</option>
+                            <option value="aventura">Aventura</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="sustainability">Certificación sostenible</label>
+                        <select id="sustainability">
+                            <option value="">Todas</option>
+                            <option value="biosphere">Biosphere Certified</option>
+                            <option value="rainforest">Rainforest Alliance</option>
+                            <option value="green-key">Green Key</option>
+                            <option value="local">Comunidad Local</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="budget">Presupuesto por noche</label>
+                        <select id="budget">
+                            <option value="">Cualquier presupuesto</option>
+                            <option value="economico">Económico ($50-100)</option>
+                            <option value="medio">Moderado ($100-200)</option>
+                            <option value="premium">Premium ($200-500)</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <button class="search-button" id="searchButton">
+                    <i class="fas fa-search"></i>
+                    Buscar Experiencias
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Results Section -->
+    <section class="results-section">
+        <div class="container">
+            <div class="results-header">
+                <h2 class="section-title" id="resultsTitle">
+                    <i class="fas fa-map-marked-alt"></i>
+                    Experiencias Disponibles
+                </h2>
+                
+                <div class="sort-options">
+                    <span class="sort-label">Ordenar por:</span>
+                    <select class="sort-select" id="sortSelect">
+                        <option value="popularidad">Popularidad</option>
+                        <option value="precio-asc">Precio: Menor a Mayor</option>
+                        <option value="precio-desc">Precio: Mayor a Menor</option>
+                        <option value="nombre">Nombre</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="experiences-grid" id="experiencesContainer">
+                <!-- Las experiencias se cargarán con JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal de Reserva -->
+    <div class="modal" id="bookingModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Confirmar Reserva</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <form id="bookingForm">
+                <div class="form-group">
+                    <label>Nombre completo</label>
+                    <input type="text" id="bookingName" required>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="bookingEmail" required>
+                </div>
+                <div class="form-group">
+                    <label>Teléfono</label>
+                    <input type="tel" id="bookingPhone" required>
+                </div>
+                <div class="form-group">
+                    <label>Notas especiales (opcional)</label>
+                    <textarea id="bookingNotes" rows="3"></textarea>
+                </div>
+                <button type="submit" class="reserve-button" style="width: 100%; margin-top: 1rem;">
+                    Confirmar Reserva
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal del Carrito -->
+    <div class="modal" id="cartModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Tu Carrito de Reservas</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            
+            <div id="cartItemsContainer">
+                <!-- Los items del carrito se cargarán aquí -->
+            </div>
+            
+            <div id="cartEmptyMessage" class="cart-empty-message" style="display: none;">
+                <i class="fas fa-shopping-cart" style="font-size: 3rem; color: var(--border); margin-bottom: 1rem;"></i>
+                <h3>Tu carrito está vacío</h3>
+                <p>Agrega experiencias desde la página de reservaciones</p>
+            </div>
+            
+            <div id="cartSummary" class="cart-summary" style="display: none;">
+                <div class="cart-total">
+                    <span>Total:</span>
+                    <span id="cartTotal">$0</span>
+                </div>
+                
+                <div class="cart-actions">
+                    <button id="clearCartBtn" class="reserve-button" style="background: var(--gray);">
+                        Vaciar Carrito
+                    </button>
+                    <button id="checkoutBtn" class="reserve-button">
+                        Finalizar Compra
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-section">
+                    <h3>Conservar Sostenible</h3>
+                    <p>Turismo responsable que cuida del planeta y sus comunidades.</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Enlaces Rápidos</h3>
+                    <a href="index.html">Inicio</a>
+                    <a href="reservaciones.html">Reservar Ahora</a>
+                    <a href="tienda.html">Tienda Ecológica</a>
+                    <a href="contacto.html">Contáctanos</a>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Contacto</h3>
+                    <p>Bogotá, Colombia</p>
+                    <p>+57 300 123 4567</p>
+                    <p>info@conservarsostenible.com</p>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>© 2024 Conservar Sostenible. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Datos de experiencias
+        const experiences = [
+            {
+                id: 1,
+                name: "Eco-Lodge Amazonas",
+                location: "Amazonas, Colombia",
+                description: "Sumérgete en la selva amazónica con mínimo impacto ambiental",
+                price: 120,
+                features: ["Energía Solar", "Reciclaje Total", "Comida Orgánica", "Guías Locales"],
+                sustainability: ["Biosphere Certified", "Rainforest Alliance"],
+                type: "eco-lodge",
+                destination: "amazonas"
+            },
+            {
+                id: 2,
+                name: "Camping Sierra Nevada",
+                location: "Santa Marta, Magdalena",
+                description: "Campamento ecológico en el corazón de la Sierra Nevada",
+                price: 65,
+                features: ["Trekking", "Avistamiento de Aves", "Cocina Local", "Baños Secos"],
+                sustainability: ["Comunidad Local", "Green Key"],
+                type: "camping",
+                destination: "caribe"
+            },
+            {
+                id: 3,
+                name: "Tour de Conservación",
+                location: "Chocó Biogeográfico",
+                description: "Contribuye a la conservación mientras exploras",
+                price: 180,
+                features: ["Avistamiento Ballenas", "Reforestación", "Comunidades", "Transporte Ecológico"],
+                sustainability: ["Biosphere Certified"],
+                type: "tour",
+                destination: "pacifico"
+            },
+            {
+                id: 4,
+                name: "Voluntariado Orgánico",
+                location: "Cafetera Colombiana",
+                description: "Aprende agricultura sostenible con familias locales",
+                price: 45,
+                features: ["Agricultura Orgánica", "Hospedaje Familiar", "Talleres", "Certificado"],
+                sustainability: ["Comunidad Local"],
+                type: "voluntariado",
+                destination: "andes"
+            },
+            {
+                id: 5,
+                name: "Aventura en los Llanos",
+                location: "Meta, Colombia",
+                description: "Vive la sabana con prácticas responsables",
+                price: 150,
+                features: ["Safari Fotográfico", "Alojamiento Rústico", "Conservación Fauna", "Cultura Llanera"],
+                sustainability: ["Green Key"],
+                type: "aventura",
+                destination: "llanos"
+            },
+            {
+                id: 6,
+                name: "Refugio Andino",
+                location: "Boyacá, Colombia",
+                description: "Refugio sostenible en los majestuosos Andes",
+                price: 95,
+                features: ["Senderismo", "Termales Naturales", "Arquitectura Bioclimática", "Productos Locales"],
+                sustainability: ["Biosphere Certified", "Comunidad Local"],
+                type: "eco-lodge",
+                destination: "andes"
+            }
+        ];
+
+        // Sistema de carrito
+        let shoppingCart = JSON.parse(localStorage.getItem('cart')) || [];
+
+        function updateCartCount() {
+            const count = shoppingCart.reduce((total, item) => total + item.quantity, 0);
+            document.getElementById('cartCount').textContent = count;
+        }
+
+        function addToCart(experience) {
+            const cartItem = {
+                id: experience.id,
+                name: experience.name,
+                location: experience.location,
+                price: experience.price,
+                quantity: 1,
+                date: new Date().toISOString()
+            };
+            
+            // Verificar si ya existe
+            const existingIndex = shoppingCart.findIndex(item => item.id === experience.id);
+            
+            if (existingIndex > -1) {
+                shoppingCart[existingIndex].quantity += 1;
+            } else {
+                shoppingCart.push(cartItem);
+            }
+            
+            saveCart();
+            updateCartCount();
+            showNotification(`✅ "${experience.name}" agregado al carrito`);
+        }
+
+        function removeFromCart(itemId) {
+            const itemIndex = shoppingCart.findIndex(item => item.id === itemId);
+            
+            if (itemIndex > -1) {
+                const itemName = shoppingCart[itemIndex].name;
+                shoppingCart.splice(itemIndex, 1);
+                saveCart();
+                updateCartCount();
+                renderCartItems();
+                showNotification(`🗑️ "${itemName}" removido del carrito`);
+            }
+        }
+
+        function updateCartItemQuantity(itemId, newQuantity) {
+            const item = shoppingCart.find(item => item.id === itemId);
+            
+            if (item) {
+                if (newQuantity <= 0) {
+                    removeFromCart(itemId);
+                } else {
+                    item.quantity = newQuantity;
+                    saveCart();
+                    updateCartCount();
+                    renderCartItems();
+                }
+            }
+        }
+
+        function clearCart() {
+            if (shoppingCart.length === 0) return;
+            
+            if (confirm('¿Estás seguro de que quieres vaciar el carrito?')) {
+                shoppingCart = [];
+                saveCart();
+                updateCartCount();
+                renderCartItems();
+                showNotification('🗑️ Carrito vaciado');
+            }
+        }
+
+        function saveCart() {
+            localStorage.setItem('cart', JSON.stringify(shoppingCart));
+        }
+
+        function calculateCartTotal() {
+            return shoppingCart.reduce((total, item) => total + (item.price * item.quantity), 0);
+        }
+
+        function renderCartItems() {
+            const container = document.getElementById('cartItemsContainer');
+            const emptyMessage = document.getElementById('cartEmptyMessage');
+            const summary = document.getElementById('cartSummary');
+            const cartTotal = document.getElementById('cartTotal');
+            
+            if (shoppingCart.length === 0) {
+                container.innerHTML = '';
+                emptyMessage.style.display = 'block';
+                summary.style.display = 'none';
+                return;
+            }
+            
+            emptyMessage.style.display = 'none';
+            summary.style.display = 'block';
+            
+            container.innerHTML = shoppingCart.map(item => `
+                <div class="cart-item">
+                    <div class="cart-item-info">
+                        <div class="cart-item-name">${item.name}</div>
+                        <div class="cart-item-location">${item.location}</div>
+                        <div class="cart-item-price">$${item.price} c/u</div>
+                    </div>
+                    
+                    <div class="cart-item-controls">
+                        <button class="quantity-btn decrease-qty" data-id="${item.id}">-</button>
+                        <span class="cart-item-quantity">${item.quantity}</span>
+                        <button class="quantity-btn increase-qty" data-id="${item.id}">+</button>
+                    </div>
+                    
+                    <div class="cart-item-total">
+                        $${item.price * item.quantity}
+                    </div>
+                    
+                    <button class="remove-item" data-id="${item.id}" style="background: none; border: none; color: #ff4757; cursor: pointer; font-size: 1.2rem;">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+                </div>
+            `).join('');
+            
+            // Actualizar total
+            cartTotal.textContent = `$${calculateCartTotal()}`;
+            
+            // Agregar eventos a los botones del carrito
+            container.querySelectorAll('.decrease-qty').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const itemId = parseInt(this.getAttribute('data-id'));
+                    const item = shoppingCart.find(item => item.id === itemId);
+                    if (item) {
+                        updateCartItemQuantity(itemId, item.quantity - 1);
+                    }
+                });
+            });
+            
+            container.querySelectorAll('.increase-qty').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const itemId = parseInt(this.getAttribute('data-id'));
+                    const item = shoppingCart.find(item => item.id === itemId);
+                    if (item) {
+                        updateCartItemQuantity(itemId, item.quantity + 1);
+                    }
+                });
+            });
+            
+            container.querySelectorAll('.remove-item').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const itemId = parseInt(this.getAttribute('data-id'));
+                    removeFromCart(itemId);
+                });
+            });
+        }
+
+        function showNotification(message) {
+            // Crear notificación temporal
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.innerHTML = `<div style="display: flex; align-items: center; gap: 10px;">${message}</div>`;
+            
+            document.body.appendChild(notification);
+            
+            // Auto-remover después de 3 segundos
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
+        }
+
+        // Generar las tarjetas de experiencias
+        function renderExperiences(expList = experiences) {
+            const container = document.getElementById('experiencesContainer');
+            container.innerHTML = '';
+            
+            expList.forEach(exp => {
+                const card = document.createElement('div');
+                card.className = 'experience-card';
+                card.innerHTML = `
+                    <div class="experience-header">
+                        <h3 class="experience-title">${exp.name}</h3>
+                        <div class="experience-location">
+                            <i class="fas fa-map-marker-alt"></i>
+                            ${exp.location}
+                        </div>
+                        <p class="experience-description">${exp.description}</p>
+                        
+                        <div class="experience-features">
+                            ${exp.features.map(feature => `
+                                <span class="feature-tag">${feature}</span>
+                            `).join('')}
+                        </div>
+                        
+                        <div class="experience-sustainability">
+                            ${exp.sustainability.map(badge => `
+                                <span class="sustainability-badge">${badge}</span>
+                            `).join('')}
+                        </div>
+                    </div>
+                    
+                    <div class="experience-footer">
+                        <div class="experience-price">
+                            <span class="price-amount">$${exp.price}</span>
+                            <span class="price-note">/ noche por persona</span>
+                        </div>
+                        <button class="reserve-button add-to-cart-btn" data-id="${exp.id}">
+                            <i class="fas fa-cart-plus"></i> Agregar al Carrito
+                        </button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+            
+            // Agregar eventos a los botones de agregar al carrito
+            document.querySelectorAll('.add-to-cart-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const expId = parseInt(this.getAttribute('data-id'));
+                    const experience = experiences.find(exp => exp.id === expId);
+                    addToCart(experience);
+                });
+            });
+        }
+
+        // Filtrar experiencias
+        function filterExperiences() {
+            const destination = document.getElementById('destination').value;
+            const experienceType = document.getElementById('experience').value;
+            const sustainability = document.getElementById('sustainability').value;
+            const budget = document.getElementById('budget').value;
+            
+            let filtered = experiences;
+            
+            if (destination) {
+                filtered = filtered.filter(exp => exp.destination === destination);
+            }
+            
+            if (experienceType) {
+                filtered = filtered.filter(exp => exp.type === experienceType);
+            }
+            
+            if (sustainability) {
+                filtered = filtered.filter(exp => 
+                    exp.sustainability.some(s => 
+                        s.toLowerCase().includes(sustainability.toLowerCase())
+                    )
+                );
+            }
+            
+            if (budget) {
+                const ranges = {
+                    'economico': [50, 100],
+                    'medio': [100, 200],
+                    'premium': [200, 500]
+                };
+                
+                if (ranges[budget]) {
+                    filtered = filtered.filter(exp => 
+                        exp.price >= ranges[budget][0] && exp.price <= ranges[budget][1]
+                    );
+                }
+            }
+            
+            // Aplicar ordenamiento actual
+            applySorting(filtered);
+            
+            // Mostrar mensaje si no hay resultados
+            if (filtered.length === 0) {
+                const container = document.getElementById('experiencesContainer');
+                container.innerHTML = `
+                    <div style="grid-column: 1 / -1; text-align: center; padding: 3rem; background: #f9f9f9; border-radius: 8px;">
+                        <i class="fas fa-search" style="font-size: 3rem; color: #ccc; margin-bottom: 1rem;"></i>
+                        <h3 style="color: #666;">No se encontraron experiencias</h3>
+                        <p style="color: #888;">No hay experiencias disponibles con los filtros seleccionados.</p>
+                        <button onclick="resetFilters()" style="background: var(--primary); color: white; border: none; padding: 0.8rem 1.5rem; border-radius: 4px; margin-top: 1rem; cursor: pointer;">
+                            Limpiar filtros
+                        </button>
+                    </div>
+                `;
+            }
+        }
+
+        function resetFilters() {
+            document.getElementById('destination').value = '';
+            document.getElementById('experience').value = '';
+            document.getElementById('sustainability').value = '';
+            document.getElementById('budget').value = '';
+            document.getElementById('sortSelect').value = 'popularidad';
+            renderExperiences();
+            updateResultsTitle(experiences.length);
+        }
+
+        function updateResultsTitle(count) {
+            const title = document.getElementById('resultsTitle');
+            title.innerHTML = `
+                <i class="fas fa-map-marked-alt"></i>
+                Experiencias Disponibles (${count})
+            `;
+        }
+
+        function applySorting(expList) {
+            const sortValue = document.getElementById('sortSelect').value;
+            let sortedExperiences = [...expList];
+            
+            switch(sortValue) {
+                case 'precio-asc':
+                    sortedExperiences.sort((a, b) => a.price - b.price);
+                    break;
+                case 'precio-desc':
+                    sortedExperiences.sort((a, b) => b.price - a.price);
+                    break;
+                case 'nombre':
+                    sortedExperiences.sort((a, b) => a.name.localeCompare(b.name));
+                    break;
+                default:
+                    // Popularidad - orden por defecto
+                    break;
+            }
+            
+            renderExperiences(sortedExperiences);
+            updateResultsTitle(sortedExperiences.length);
+        }
+
+        // Función para abrir el modal del carrito
+        function openCartModal() {
+            renderCartItems();
+            document.getElementById('cartModal').style.display = 'flex';
+        }
+
+        // Función para cerrar el modal del carrito
+        function closeCartModal() {
+            document.getElementById('cartModal').style.display = 'none';
+        }
+
+        // Función para abrir modal de reserva
+        function openBookingModal(expId) {
+            const experience = experiences.find(exp => exp.id === parseInt(expId));
+            const modal = document.getElementById('bookingModal');
+            const modalTitle = modal.querySelector('.modal-title');
+            
+            modalTitle.textContent = `Reservar: ${experience.name}`;
+            modal.style.display = 'flex';
+        }
+
+        // Inicializar
+        document.addEventListener('DOMContentLoaded', () => {
+            // Renderizar experiencias iniciales
+            renderExperiences();
+            updateCartCount();
+            updateResultsTitle(experiences.length);
+            
+            // Configurar fechas
+            const today = new Date();
+            const tomorrow = new Date(today);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            
+            const formatDate = (date) => date.toISOString().split('T')[0];
+            
+            document.getElementById('checkin').value = formatDate(today);
+            document.getElementById('checkin').min = formatDate(today);
+            
+            document.getElementById('checkout').value = formatDate(tomorrow);
+            document.getElementById('checkout').min = formatDate(tomorrow);
+            
+            // Event listeners
+            document.getElementById('searchButton').addEventListener('click', filterExperiences);
+            
+            // Ordenar experiencias
+            document.getElementById('sortSelect').addEventListener('change', () => {
+                filterExperiences();
+            });
+            
+            // Evento para ver carrito
+            document.getElementById('cartIcon').addEventListener('click', openCartModal);
+            
+            // Menú móvil
+            document.querySelector('.mobile-menu-btn').addEventListener('click', function() {
+                document.querySelector('.main-nav').classList.toggle('active');
+            });
+            
+            // Botón para vaciar carrito
+            document.getElementById('clearCartBtn').addEventListener('click', clearCart);
+            
+            // Botón para finalizar compra
+            document.getElementById('checkoutBtn').addEventListener('click', function() {
+                if (shoppingCart.length === 0) {
+                    alert('El carrito está vacío');
+                    return;
+                }
+                
+                const total = calculateCartTotal();
+                if (confirm(`¿Confirmar compra de ${shoppingCart.length} items por un total de $${total}?`)) {
+                    // En un sistema real, aquí se procesaría el pago
+                    alert('✅ Compra realizada con éxito. ¡Gracias por tu reserva!\n\nSe ha enviado un correo de confirmación con los detalles de tu reserva.');
+                    shoppingCart = [];
+                    saveCart();
+                    updateCartCount();
+                    closeCartModal();
+                    showNotification('✅ Compra realizada exitosamente');
+                }
+            });
+            
+            // Cerrar modales
+            document.querySelectorAll('.close-modal').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const modal = this.closest('.modal');
+                    modal.style.display = 'none';
+                });
+            });
+            
+            // Cerrar modal al hacer clic fuera
+            window.addEventListener('click', function(event) {
+                if (event.target.classList.contains('modal')) {
+                    event.target.style.display = 'none';
+                }
+            });
+            
+            // Validar fechas
+            document.getElementById('checkin')?.addEventListener('change', function() {
+                const checkout = document.getElementById('checkout');
+                if (checkout.value && checkout.value <= this.value) {
+                    const nextDay = new Date(this.value);
+                    nextDay.setDate(nextDay.getDate() + 1);
+                    checkout.value = formatDate(nextDay);
+                }
+                checkout.min = this.value;
+            });
+
+            // Formulario de reserva
+            document.getElementById('bookingForm')?.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const name = document.getElementById('bookingName').value;
+                const email = document.getElementById('bookingEmail').value;
+                const phone = document.getElementById('bookingPhone').value;
+                
+                // En un sistema real, aquí se enviaría la reserva al servidor
+                alert(`✅ Reserva confirmada para ${name}\n\nRecibirás un correo de confirmación en ${email} con todos los detalles.`);
+                
+                // Limpiar formulario
+                this.reset();
+                closeModal();
+                
+                showNotification('✅ Reserva confirmada exitosamente');
+            });
+        });
+
+        // Helper function para cerrar modal de reserva
+        function closeModal() {
+            document.getElementById('bookingModal').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

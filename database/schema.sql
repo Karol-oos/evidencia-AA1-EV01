@@ -55,3 +55,11 @@ CREATE INDEX idx_products_featured ON products(is_featured);
 CREATE INDEX idx_reservations_user ON reservations(user_id);
 CREATE INDEX idx_reservations_status ON reservations(status);
 CREATE INDEX idx_contacts_status ON contacts(status);
+
+CREATE TABLE contacts (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL,
+    message TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

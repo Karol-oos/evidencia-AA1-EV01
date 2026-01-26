@@ -93,3 +93,7 @@ app.listen(PORT, () => {
   console.log(`🚀 Servidor corriendo en: http://localhost:${PORT}`);
   console.log(`📚 Documentación API: http://localhost:${PORT}/api-docs`);
 });
+
+// Servir archivos estáticos
+app.use(express.static('public'));
+app.use('/img', express.static('img'));

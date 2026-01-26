@@ -1,7 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const { sendContactMessage } = require('../controllers/contact.controller');
+const contactController = require('../controllers/contact.controller');
 
+// Ruta POST para enviar mensaje de contacto
+router.post('/', contactController.createContact);
 /**
  * @swagger
  * /api/contact:

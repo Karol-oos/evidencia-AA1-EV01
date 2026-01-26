@@ -172,4 +172,14 @@ class ContactController {
     }
 }
 
+    {getAllContacts: async (req, res) => {
+        try {
+            const result = await db.query('SELECT * FROM contacts ORDER BY created_at DESC');
+            res.json({ success: true, data: result.rows });
+        } catch (error) {
+            console.error('Error obteniendo contactos:', error);
+            res.status(500).json({ success: false, error: 'Error del servidor' });
+        }
+    }
+};
 module.exports = new ContactController();
